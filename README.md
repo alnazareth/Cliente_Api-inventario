@@ -12,7 +12,9 @@ Este cliente es una aplicación web que consume la API del Sistema de Inventario
 - Interfaz amigable para la gestión de productos.
 - Integración con la API.
 - Visualización del estado de los productos.
+
 -Sacar cantidad de productos del Stock
+
 -opcion eliminar esta comentada en la vista
 
 ## Prerrequisitos
