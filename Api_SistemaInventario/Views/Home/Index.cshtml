@@ -1,0 +1,110 @@
+﻿@model List<Product>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["Error"]
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Success"]
+    </div>
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Productos</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+
+    <div class="text-center">
+        <h1 class="display-4">Itsense Inventory</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            @ViewBag.Accion
+        </div>
+
+        <div class="card-body">
+
+            <a asp-action="Producto" asp-controller="Home" class="btn btn-success btn-sm">Nuevo Producto</a>
+            <hr />
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Elaboración</th>
+                        <th>Existencia</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Name</td>
+                            <td>@item.InStock</td>
+                            <td>@item.PreparationType</td>
+                            <td>@item.Status</td>
+                            <td>
+                                <!-- "Defectuoso aqui" -->
+                                <form asp-action="PonerDefectuoso" asp-controller="Home" asp-route-id="@item.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-primary btn-sm">Poner Defectuoso</button>
+                                </form>
+
+                                <!-- Opcion "Sacar" -->
+                                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal-@item.Id">Sacar</button>
+
+                                <!-- Botón "Eliminar" -->
+                                <!--     <a asp-action="Eliminar" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Eliminar</a>
+                                -->
+                            </td>
+
+                            <!-- Modal para cada producto -->
+                            <div class="modal fade" id="myModal-@item.Id" tabindex="-1" aria-labelledby="myModalLabel-@item.Id" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="myModalLabel-@item.Id">Cantidad de producto a sacar</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form asp-action="SacarProducto" asp-controller="Home" method="post">
+                                                <input type="hidden" name="productId" value="@item.Id" />
+                                                <div class="form-group">
+                                                    <label for="cantidad">Cantidad a reducir:</label>
+                                                    <input type="number" name="cantidad" min="1" value="1" class="form-control" required />
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Confirmar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- librerias jQuery y Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
